@@ -7,6 +7,8 @@ fastify.get('/',{
         }, async (request:any, reply:any) => {
   return { hello: 'world' }
 })
+
+//j
 fastify.get('/jwt', async (request:any, reply:any) => {
   return { hello: 'world' }
 })
