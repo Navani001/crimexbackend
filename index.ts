@@ -9,6 +9,12 @@ fastify.get('/', async (request:any, reply:any) => {
   return { hello: 'world' }
 })
 
+
+fastify.post('/', async (request:any, reply:any) => {
+  console.log(request.body)
+  return { hello: 'world' }
+})
+
 /**
  * Run the server!
  */
