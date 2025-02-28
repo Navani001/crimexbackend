@@ -12,7 +12,7 @@ fastify.get('/', async (request:any, reply:any) => {
 
 fastify.post('/', async (request:any, reply:any) => {
   console.log(request.body)
-  return { hello: 'world' }
+  return {hi:request.body }
 })
 
 /**
