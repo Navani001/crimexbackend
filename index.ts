@@ -1,23 +1,16 @@
-import Fastify from 'fastify'
 
+import fastify from './src/middleware/jwt';
+import {  LoginUserRoute } from './src/routes/auth';
 
-const fastify = require('fastify')({
-  logger: true
-})
-
-fastify.get('/', async (request:any, reply:any) => {
+fastify.get('/',{
+            preHandler: [fastify.authenticate],
+        }, async (request:any, reply:any) => {
   return { hello: 'world' }
 })
-
-
-fastify.post('/', async (request:any, reply:any) => {
-  console.log(request.body)
-  return {hi:request.body }
+fastify.get('/jwt', async (request:any, reply:any) => {
+  return { hello: 'world' }
 })
-
-/**
- * Run the server!
- */
+fastify.register(LoginUserRoute,{prefix:"/api/auth"})
 const start = async () => {
   try {
     await fastify.listen({ port: 3000 })
