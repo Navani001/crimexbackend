@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { Login } from "../services/auth";
-import { Create } from "../services/createsurvey";
+import { Create } from "../services/createSurvey";
 
 export async function CreateSurvey(req: FastifyRequest, reply: FastifyReply) {
 const user=req.user

@@ -1,7 +1,7 @@
 
 import fastify from './src/middleware/jwt';
 import {  LoginUserRoute } from './src/routes/auth';
-import { CreationRoute } from './src/routes/surveycreation';
+import { CreationRoute } from './src/routes/surveyCreation';
 
 fastify.get('/',{
             preHandler: [fastify.authenticate],
