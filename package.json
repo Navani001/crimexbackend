@@ -17,9 +17,7 @@
     "@fastify/sensible": "^6.0.3",
     "@prisma/client": "^6.4.1",
     "bcrypt": "^5.1.1",
-    "express": "^4.21.2",
     "fastify": "^5.2.1",
-    "fastify-cookie": "^5.5.0",
     "nodemon": "^3.1.9",
     "uninstall": "^0.0.0"
   },
@@ -32,8 +30,8 @@
     "dev": "nodemon ./index.ts",
     "seed": "ts-node prisma/seed.ts",
     "postinstall": "prisma generate",
-    "migrate":"prisma migrate dev --name init",
-    "reset":"prisma migrate reset"
+    "migrate": "prisma migrate dev --name init",
+    "reset": "prisma migrate reset"
   },
   "keywords": [],
   "author": "",

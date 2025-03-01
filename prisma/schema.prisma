@@ -58,7 +58,7 @@ model QuestionType {
 
 model OptionShowType {
   id                            Int                            @id @default(autoincrement())
-  status                        String
+  name                        String
   optionShowTypeSurveyQuestions OptionShowTypeSurveyQuestion[]
   SurveyQuestion                SurveyQuestion[]
 }

@@ -7,7 +7,7 @@ export async function Question(userdata:any,body:any) {
             return { message: "data is required", data: null };
         }
     try{
-          const user =await prisma.surveyQuestion.create({data:
+          const question =await prisma.surveyQuestion.create({data:
            {
             questionTypeId:body.questionTypeId,
             surveyId: body.surveyId,
@@ -16,10 +16,9 @@ export async function Question(userdata:any,body:any) {
             score: body.score?body.score:-1,
             isOther:body.isOther,
             isMultiple:body.isMultiple
-
         }})
-          console.log(user)
-         return {message:"creation successful",data:user}
+        
+         return {message:"creation successful",data:question}
     }
     catch(err){
         console.log(err)

@@ -6,7 +6,7 @@ export async function CreationRoute(fastify: FastifyInstance) {
   fastify.post("/create",{
             preHandler: [fastify.authenticate],
         }, CreateSurvey);
-        fastify.post("/createquestion",{
+fastify.post("/createquestion",{
             preHandler: [fastify.authenticate],
         }, CreateQuestion);
   
