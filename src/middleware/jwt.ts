@@ -1,30 +1,63 @@
-import fjwt from '@fastify/jwt'
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
+import fastifyJwt, { JWT } from '@fastify/jwt';
+import fastifyCookie from '@fastify/cookie';
 
 const fastify = Fastify();
-import fastifyJwt, { JWT } from '@fastify/jwt'
+
+// Define the types for request user property
 declare module 'fastify' {
-    interface FastifyRequest {
-        jwt: JWT
-    }
-    export interface FastifyInstance {
-        authenticate: any
-    }
+  interface FastifyRequest {
+    jwt: JWT;
+   
+  }
+  export interface FastifyInstance {
+    authenticate: any
+  }
 }
 
-fastify.register(fastifyJwt, {
-    secret: process.env.JWT_SECRET || 'imvinojan02061999xxxx'
+// Register the cookie plugin first
+fastify.register(fastifyCookie, {
+  secret: process.env.COOKIE_SECRET || 'some-secret-key',
+  hook: 'onRequest', // Change to onRequest to ensure cookies are parsed early
 });
 
+// Then register the JWT plugin
+fastify.register(fastifyJwt, {
+  secret: process.env.JWT_SECRET || 'imvinojan02061999xxxx',
+  cookie: {
+    cookieName: 'access_token',
+    signed: false // Set to true if you want signed cookies
+  }
+});
+
+// Authentication decorator
 fastify.decorate(
-    'authenticate',
-    async (request: FastifyRequest, reply: FastifyReply) => {
-        try {
-            
-      await request.jwtVerify();
+  'authenticate',
+  async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const token = request.cookies.access_token;
+      
+      if (!token) {
+        throw new Error('No token provided');
+      }
+      
+      // Verify the token
+      const decoded = fastify.jwt.verify(token);
+      
+      // Set the user in the request
+      request.user = decoded;
+      
+      // Log successful authentication
+      console.log('User authenticated:', decoded);
+      
     } catch (err) {
-      reply.code(401).send({ error: 'Unauthorized', message: 'Invalid or expired token' });
+      console.error('Authentication error:', err);
+      reply.code(401).send({ 
+        error: 'Unauthorized', 
+        message: 'Invalid or expired token' 
+      });
     }
-    }
+  }
 );
+
 export default fastify;

@@ -1,6 +1,7 @@
 
 import fastify from './src/middleware/jwt';
 import {  LoginUserRoute } from './src/routes/auth';
+import { CreationRoute } from './src/routes/surveycreation';
 
 fastify.get('/',{
             preHandler: [fastify.authenticate],
@@ -13,6 +14,8 @@ fastify.get('/jwt', async (request:any, reply:any) => {
   return { hello: 'world' }
 })
 fastify.register(LoginUserRoute,{prefix:"/api/auth"})
+fastify.register(CreationRoute,{prefix:"/api/survey"})
+
 const start = async () => {
   try {
     await fastify.listen({ port: 3000 })

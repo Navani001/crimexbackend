@@ -49,6 +49,7 @@ model Login {
 model QuestionType {
   id              Int              @id @default(autoincrement())
   name            String
+  label String
   isDeleted       Boolean          @default(false)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -64,23 +65,23 @@ model OptionShowType {
 
 model OptionType {
   id                Int                 @id @default(autoincrement())
-  type              String
+  name              String
+  label             String
   surveyQuestions   SurveyQuestion[]
   preDefinedOptions PreDefinedOptions[]
 }
 
 model Survey {
-  id            Int      @id @default(autoincrement())
-  name          String
-  facultyId     Int
-  status        Status
-  startTime     DateTime
-  endTime       DateTime
-  groupId       Int      @default(-1)
-  responseCount Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
+  id              Int              @id @default(autoincrement())
+  name            String
+  facultyId       Int
+  status          String
+  startTime       DateTime?
+  endTime         DateTime?
+  groupId         Int              @default(-1)
+  responseCount   Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   faculty         Login            @relation(fields: [facultyId], references: [id])
   surveyQuestions SurveyQuestion[]
 }

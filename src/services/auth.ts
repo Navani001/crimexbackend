@@ -6,11 +6,11 @@ export async function Login(data:any) {
             return { message: "Email is required", data: null };
         }
     try{
-          const user =await prisma.login.findFirst({where:{email:data.email}})
+          const user =await prisma.login.findFirst({where: {email:data.email}})
           console.log(user)
         
-          const accessToken = fastify.jwt.sign({ payload:{data} });
-          console.log(accessToken)
+          const accessToken = fastify.jwt.sign({ payload:{id:user?.id,name:user?.name,email:user?.email} });
+          
          return {message:"Login successful",data:accessToken}
     }
     catch(err){

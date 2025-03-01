@@ -4,19 +4,14 @@ const prisma = new PrismaClient();
 const data = [
   {
     id: 1,
-    name: "raj",
-    email: "raj@gmail.com",
-    logo: "ff",
-    isDeleted: false,
-    updatedAt: new Date(),
-    createdAt: new Date(),
-    roleId: 1
+    name: "test",
+    label:"test"
   },
 ];
 
-async function loginSeed() {
+async function optionSeed() {
   for (const record of data) {
-    await prisma.login.upsert({
+    await prisma.optionType.upsert({
       where: { id: record.id },
       create: record,
       update: record
@@ -24,4 +19,4 @@ async function loginSeed() {
   }
 }
 
-export default loginSeed;
+export default optionSeed;

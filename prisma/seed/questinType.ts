@@ -5,18 +5,12 @@ const data = [
   {
     id: 1,
     name: "raj",
-    email: "raj@gmail.com",
-    logo: "ff",
-    isDeleted: false,
-    updatedAt: new Date(),
-    createdAt: new Date(),
-    roleId: 1
+    label: "raj"
   },
 ];
-
-async function loginSeed() {
+async function QuestionSeed() {
   for (const record of data) {
-    await prisma.login.upsert({
+    await prisma.questionType.upsert({
       where: { id: record.id },
       create: record,
       update: record
@@ -24,4 +18,4 @@ async function loginSeed() {
   }
 }
 
-export default loginSeed;
+export default QuestionSeed;
