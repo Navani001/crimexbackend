@@ -1,55 +1,36 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql" // You can change this to your preferred database
+  url      = env("DATABASE_URL")
 }
 
-// Prisma schema for College Survey System
-
-// Enums
-enum Status {
-  completed
-  deleted
-  inProgress
-  yetToStart
-}
-
-enum RoleType {
-  admin
-  faculty
-  student
-}
-
-// Models
 model Login {
   id                     Int                     @id @default(autoincrement())
   name                   String
   email                  String                  @unique
+  roleId                 Int
   logo                   String?
   isDeleted              Boolean                 @default(false)
   createdAt              DateTime                @default(now())
   updatedAt              DateTime                @updatedAt
+  role                   Role                    @relation(fields: [roleId], references: [id])
   surveys                Survey[]
+  otherValues            OtherValue[]
   studentSurveyResponses StudentSurveyResponse[]
+}
 
-  roleInfo Role @relation(fields: [roleId], references: [id])
-  roleId   Int
+model Role {
+  id     Int     @id @default(autoincrement())
+  name   String
+  logins Login[]
 }
 
 model QuestionType {
   id              Int              @id @default(autoincrement())
   name            String
-  label String
   isDeleted       Boolean          @default(false)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -58,17 +39,16 @@ model QuestionType {
 
 model OptionShowType {
   id                            Int                            @id @default(autoincrement())
-  name                        String
+  status                        String
+  surveyQuestions               SurveyQuestion[]
   optionShowTypeSurveyQuestions OptionShowTypeSurveyQuestion[]
-  SurveyQuestion                SurveyQuestion[]
 }
 
 model OptionType {
-  id                Int                 @id @default(autoincrement())
-  name              String
-  label             String
-  surveyQuestions   SurveyQuestion[]
-  preDefinedOptions PreDefinedOptions[]
+  id              Int              @id @default(autoincrement())
+  type            String
+  surveyQuestions SurveyQuestion[]
+  options         Options[]
 }
 
 model Survey {
@@ -87,78 +67,39 @@ model Survey {
 }
 
 model SurveyQuestion {
-  id                      Int      @id @default(autoincrement())
-  questionTypeId          Int
-  surveyId                Int
-  question                String
-  score                   Int      @default(-1)
-  facultyDefinedOptionsId Int?
-  preDefinedOptionsId     Int?
-  optionTypeId            Int
-  isOther                 Boolean  @default(false)
-  optionShowTypeId        Int?
-  isActive                Boolean  @default(true)
-  isMultiple              Boolean  @default(false)
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
-
-  questionType          QuestionType           @relation(fields: [questionTypeId], references: [id])
-  survey                Survey                 @relation(fields: [surveyId], references: [id])
-  optionType            OptionType             @relation(fields: [optionTypeId], references: [id])
-  optionShowType        OptionShowType?        @relation(fields: [optionShowTypeId], references: [id])
-  preDefinedOptions     PreDefinedOptions?     @relation(fields: [preDefinedOptionsId], references: [id])
-  facultyCreatedOptions FacultyCreatedOptions? @relation(fields: [facultyDefinedOptionsId], references: [id])
-
+  id                            Int                            @id @default(autoincrement())
+  questionTypeId                Int
+  surveyId                      Int
+  question                      String
+  score                         Int                            @default(-1)
+  optionTypeId                  Int
+  isOther                       Boolean                        @default(false)
+  isActive                      Boolean                        @default(true)
+  isMultiple                    Boolean                        @default(false)
+  createdAt                     DateTime                       @default(now())
+  updatedAt                     DateTime                       @updatedAt
+  questionType                  QuestionType                   @relation(fields: [questionTypeId], references: [id])
+  survey                        Survey                         @relation(fields: [surveyId], references: [id])
+  optionType                    OptionType                     @relation(fields: [optionTypeId], references: [id])
   matrixColumns                 MatrixColumn[]
+  optionsQuestions              OptionsQuestion[]
   studentSurveyResponses        StudentSurveyResponse[]
+  otherValues                   OtherValue[]
   optionShowTypeSurveyQuestions OptionShowTypeSurveyQuestion[]
-}
-
-model PreDefinedOptions {
-  id           Int      @id @default(autoincrement())
-  optionTypeId Int
-  option       String
-  priority     Int?
-  isDeleted    Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  optionType             OptionType              @relation(fields: [optionTypeId], references: [id])
-  surveyQuestions        SurveyQuestion[]
-  studentSurveyResponses StudentSurveyResponse[]
+  OptionShowType                OptionShowType?                @relation(fields: [optionShowTypeId], references: [id])
+  optionShowTypeId              Int?
 }
 
 model MatrixColumn {
-  id         Int    @id @default(autoincrement())
+  id         Int            @id @default(autoincrement())
   columnName String
   questionId Int
-
-  surveyQuestion SurveyQuestion @relation(fields: [questionId], references: [id])
-}
-
-model FacultyCreatedOptions {
-  id        Int      @id @default(autoincrement())
-  option    String
-  priority  Int?
-  isDeleted Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  surveyQuestions        SurveyQuestion[]
-  studentSurveyResponses StudentSurveyResponse[]
-}
-
-model Role {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
-  logins Login[]
-  groups Group[]
+  question   SurveyQuestion @relation(fields: [questionId], references: [id])
 }
 
 model Skill {
-  id     Int     @id @default(autoincrement())
-  name   String
-  groups Group[]
+  id   Int    @id @default(autoincrement())
+  name String
 }
 
 model Group {
@@ -168,34 +109,55 @@ model Group {
   level     Int    @default(0)
   minimumRp Int    @default(0)
   maximumRp Int    @default(1000000000)
-
-  skill   Skill @relation(fields: [skillId], references: [id])
-  role    Role  @relation(fields: [roleId], references: [id])
-  skillId Int
-  roleId  Int
+  // Note: Cannot directly model the dual relationship from group.typeId to both skill.id and role.id in Prisma
+  // You'll need to decide which one is the primary relationship or restructure this relationship
 }
 
 model OptionShowTypeSurveyQuestion {
-  id                   Int @id @default(autoincrement())
-  surveyQuestionTypeId Int
-  optionStatusId       Int
-
-  surveyQuestion SurveyQuestion @relation(fields: [surveyQuestionTypeId], references: [id])
-  optionShowType OptionShowType @relation(fields: [optionStatusId], references: [id])
+  id               Int            @id @default(autoincrement())
+  surveyQuestionId Int
+  optionShowTypeId Int
+  surveyQuestion   SurveyQuestion @relation(fields: [surveyQuestionId], references: [id])
+  optionShowType   OptionShowType @relation(fields: [optionShowTypeId], references: [id])
 }
 
 model StudentSurveyResponse {
-  id                      Int      @id @default(autoincrement())
+  id                      Int            @id @default(autoincrement())
   surveyQuestionId        Int
   loginId                 Int
-  preDefinedOptionId      Int      @default(-1)
-  otherResponse           String?
-  facultyOptionSelectedId Int      @default(-1)
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
+  preDefinedOptionId      Int            @default(-1)
+  facultyOptionSelectedId Int            @default(-1)
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+  surveyQuestion          SurveyQuestion @relation(fields: [surveyQuestionId], references: [id])
+  login                   Login          @relation(fields: [loginId], references: [id])
+}
 
-  surveyQuestion        SurveyQuestion         @relation(fields: [surveyQuestionId], references: [id])
-  login                 Login                  @relation(fields: [loginId], references: [id])
-  preDefinedOption      PreDefinedOptions?     @relation(fields: [preDefinedOptionId], references: [id])
-  facultyOptionSelected FacultyCreatedOptions? @relation(fields: [facultyOptionSelectedId], references: [id])
+model Options {
+  id               Int               @id @default(autoincrement())
+  name             String?
+  optionTypeId     Int
+  isPredefined     Boolean
+  priority         Int               @default(0)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  isDeleted        Boolean           @default(false)
+  optionType       OptionType        @relation(fields: [optionTypeId], references: [id])
+  optionsQuestions OptionsQuestion[]
+}
+
+model OptionsQuestion {
+  id         Int            @id @default(autoincrement())
+  optionId   Int
+  questionId Int
+  option     Options        @relation(fields: [optionId], references: [id])
+  question   SurveyQuestion @relation(fields: [questionId], references: [id])
+}
+
+model OtherValue {
+  id         Int            @id @default(autoincrement())
+  loginId    Int
+  questionId Int
+  login      Login          @relation(fields: [loginId], references: [id])
+  question   SurveyQuestion @relation(fields: [questionId], references: [id])
 }

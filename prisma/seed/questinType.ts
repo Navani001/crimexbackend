@@ -5,7 +5,7 @@ const data = [
   {
     id: 1,
     name: "raj",
-    label: "raj"
+   
   },
 ];
 async function QuestionSeed() {

@@ -2,28 +2,35 @@
 import prisma from "../lib/prisma";
 export async function Question(userdata:any,body:any) {
     console.log(body)
-      if (!body) {
-            console.log("No data provided");
-            return { message: "data is required", data: null };
-        }
+    const options=body.options
     try{
-          const question =await prisma.surveyQuestion.create({data:
-           {
-            questionTypeId:body.questionTypeId,
-            surveyId: body.surveyId,
-            question: body.question,
-            optionTypeId:body.optionTypeId,
-            score: body.score?body.score:-1,
-            isOther:body.isOther,
-            isMultiple:body.isMultiple
-        }})
-        
-         return {message:"creation successful",data:question}
+      const question =await prisma.surveyQuestion.create({data:{
+        questionTypeId:body.questionTypeId,
+        surveyId:body.surveyId,
+        question:body.question,
+        optionTypeId:body.optionTypeId
+      }})
+if(body.optionsType=='pre'){
+  const createdOptions= await prisma.optionsQuestion.createMany(
+    {data:options.map((item:any)=>
+    ({optionId:item.id,questionId:question.id}))
+  })
+  console.log(createdOptions)
+}else{
+
+  options.map(async (item:any)=>{
+   const temp=await prisma.options.create({data:{name:item.name,optionTypeId:body.optionTypeId,isPredefined:false}})
+   console.log(temp)
+    prisma.optionsQuestion.create({data:{questionId:question.id,optionId:temp.id}})
+  })
+}
+      
+    return {message:"Question created successfully"}
+    }catch(err){
+console.log(err)
+  return {message:"Creation failed",data:null}
     }
-    catch(err){
-        console.log(err)
-        return {message:"Creation failed",data:null}
-    }
+
    
 }
 

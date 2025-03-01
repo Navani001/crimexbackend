@@ -1,21 +1,25 @@
 import { PrismaClient } from "@prisma/client";
 import logginSeed from "./seed/loginSeed";
 import roleSeed from "./seed/roleSeed";
-import optionSeed from "./seed/optionSeed";
+
 import QuestionSeed from "./seed/questinType";
 import OptionShowSeed from "./seed/optionShowSeed";
-import preDifinedOptionSeed from "./seed/preDifinedOptionSeed";
+
+import loginSeed from "./seed/loginSeed";
+import OptionsSeed from "./seed/optionsSeed";
+import OptionTypeSeed from "./seed/optionsTypeSeed";
 
 
 const prisma = new PrismaClient();
 
 async function main() {
   await roleSeed();
-  await logginSeed();
-  await optionSeed()
-  await QuestionSeed()
-  await OptionShowSeed()
-  await preDifinedOptionSeed()
+  await loginSeed();
+  await QuestionSeed();
+  await OptionShowSeed();
+  await logginSeed()
+  await OptionTypeSeed()
+  // await OptionsSeed();
 }
 
 
