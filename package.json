@@ -35,7 +35,6 @@
   "git": "git add . && git commit -m \"$npm_config_m\" && git push origin master"
 
 
-
   },
   "keywords": [],
   "author": "",
