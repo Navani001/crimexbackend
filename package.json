@@ -32,7 +32,7 @@
     "postinstall": "prisma generate",
     "migrate": "prisma migrate dev --name init",
     "reset": "prisma migrate reset",
-  "git": "git commit -am \"$1\" && git push origin \"$2\""
+  "git": "git commit -am \"$1\" && git push origin master"
 
   },
   "keywords": [],
