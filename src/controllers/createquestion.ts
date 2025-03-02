@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import { Question } from "../services/createQuetion";
+import { Question } from "../services/createquetion";
 
 export async function CreateQuestion(req: FastifyRequest, reply: FastifyReply) {
 const user=req.user
