@@ -14,11 +14,17 @@ const prisma = new PrismaClient();
 
 async function main() {
   await roleSeed();
+  console.log("one")
   await loginSeed();
-    await OptionTypeSeed()
+  console.log("two")
+  await OptionTypeSeed()
+  console.log("three")
   await QuestionSeed();
+  console.log("four")
   await OptionShowSeed();
+  console.log("five")
   await logginSeed()
+  console.log("six")
 
 
   await OptionsSeed();

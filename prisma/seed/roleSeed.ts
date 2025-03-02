@@ -7,7 +7,7 @@ const data = [
     name: "raj",
   },
 ];
-console.log("hi")
+
 async function roleSeed() {
   for (const record of data) {
     await prisma.role.upsert({
