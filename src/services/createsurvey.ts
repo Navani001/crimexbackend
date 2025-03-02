@@ -1,6 +1,6 @@
 
 import prisma from "../lib/prisma";
-export async function Create(userdata:any,body:any) {
+export async function createSurvey(userdata:any,body:any) {
       if (!body) {
             console.log("No data provided");
             return { message: "data is required", data: null };

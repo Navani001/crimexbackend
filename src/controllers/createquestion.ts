@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Create } from "../services/createSurvey";
+
 import { Question } from "../services/createQuetion";
 
 export async function CreateQuestion(req: FastifyRequest, reply: FastifyReply) {
