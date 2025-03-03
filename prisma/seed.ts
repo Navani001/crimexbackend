@@ -8,6 +8,7 @@ import OptionShowSeed from "./seed/optionShowSeed";
 import loginSeed from "./seed/loginSeed";
 import OptionsSeed from "./seed/optionsSeed";
 import OptionTypeSeed from "./seed/optionsTypeSeed";
+import skillSeed from "./seed/skillSeed";
 
 
 const prisma = new PrismaClient();
@@ -25,9 +26,11 @@ async function main() {
   console.log("five")
   await logginSeed()
   console.log("six")
-
-
+  await skillSeed()
+  console.log("seven")
   await OptionsSeed();
+  console.log("eight")
+
 }
 
 

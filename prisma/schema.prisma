@@ -1,12 +1,10 @@
 generator client {
   provider = "prisma-client-js"
-
 }
 
-// prisma/schema.prisma
 datasource db {
   provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
   // uncomment next line if you use Prisma <5.10
   // directUrl = env("DATABASE_URL_UNPOOLED")
 }
@@ -17,6 +15,7 @@ model Login {
   email                  String                  @unique
   roleId                 Int
   logo                   String?
+  rp                     Int                     @default(0) // Added RP field for students
   isDeleted              Boolean                 @default(false)
   createdAt              DateTime                @default(now())
   updatedAt              DateTime                @updatedAt
@@ -24,12 +23,14 @@ model Login {
   surveys                Survey[]
   otherValues            OtherValue[]
   studentSurveyResponses StudentSurveyResponse[]
+  surveyParticipation    SurveyParticipant[]     // Added for tracking which groups/surveys a login belongs to
 }
 
 model Role {
-  id     Int     @id @default(autoincrement())
-  name   String
-  logins Login[]
+  id         Int         @id @default(autoincrement())
+  name       String
+  logins     Login[]
+  groupRoles GroupRole[] // Added relationship to groups
 }
 
 model QuestionType {
@@ -56,18 +57,20 @@ model OptionType {
 }
 
 model Survey {
-  id              Int              @id @default(autoincrement())
-  name            String
-  facultyId       Int
-  status          String
-  startTime       DateTime?
-  endTime         DateTime?
-  groupId         Int              @default(-1)
-  responseCount   Int              @default(0)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  faculty         Login            @relation(fields: [facultyId], references: [id])
-  surveyQuestions SurveyQuestion[]
+  id                  Int                  @id @default(autoincrement())
+  name                String
+  facultyId           Int
+  status              String
+  startTime           DateTime?
+  endTime             DateTime?
+  groupId             Int?                 // Optional group ID (can be null)
+  responseCount       Int                  @default(0)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  faculty             Login                @relation(fields: [facultyId], references: [id])
+  surveyQuestions     SurveyQuestion[]
+  groups              SurveyGroup[]        // Many-to-many relationship with groups (can be empty)
+  surveyParticipants  SurveyParticipant[]  // Track participants
 }
 
 model SurveyQuestion {
@@ -90,7 +93,7 @@ model SurveyQuestion {
   studentSurveyResponses        StudentSurveyResponse[]
   otherValues                   OtherValue[]
   optionShowTypeSurveyQuestions OptionShowTypeSurveyQuestion[]
-  OptionShowType                OptionShowType?                @relation(fields: [optionShowTypeId], references: [id])
+  optionShowType                OptionShowType?                @relation(fields: [optionShowTypeId], references: [id])
   optionShowTypeId              Int?
 }
 
@@ -102,19 +105,67 @@ model MatrixColumn {
 }
 
 model Skill {
-  id   Int    @id @default(autoincrement())
-  name String
+  id          Int           @id @default(autoincrement())
+  name        String
+  groupSkills GroupSkill[]  // Added relationship to groups
 }
 
 model Group {
-  id        Int    @id @default(autoincrement())
-  type      String
-  typeId    Int
-  level     Int    @default(0)
-  minimumRp Int    @default(0)
-  maximumRp Int    @default(1000000000)
-  // Note: Cannot directly model the dual relationship from group.typeId to both skill.id and role.id in Prisma
-  // You'll need to decide which one is the primary relationship or restructure this relationship
+  id          Int           @id @default(autoincrement())
+  name        String        // Added name field
+  minimumRp   Int           @default(0)
+  maximumRp   Int           @default(1000000000)
+  level       Int           @default(0)
+  description String?       // Added description
+  
+  // Relations to replace the problematic type/typeId fields
+  skills      GroupSkill[]  // Many-to-many with skills
+  roles       GroupRole[]   // Many-to-many with roles
+  surveys     SurveyGroup[] // Many-to-many with surveys
+}
+
+// Junction table for Group-Skill many-to-many
+model GroupSkill {
+  id        Int      @id @default(autoincrement())
+  groupId   Int
+  skillId   Int
+  group     Group    @relation(fields: [groupId], references: [id])
+  skill     Skill    @relation(fields: [skillId], references: [id])
+
+  @@unique([groupId, skillId])
+}
+
+// Junction table for Group-Role many-to-many
+model GroupRole {
+  id        Int      @id @default(autoincrement())
+  groupId   Int
+  roleId    Int
+  group     Group    @relation(fields: [groupId], references: [id])
+  role      Role     @relation(fields: [roleId], references: [id])
+
+  @@unique([groupId, roleId])
+}
+
+// Junction table for Survey-Group many-to-many
+model SurveyGroup {
+  id        Int      @id @default(autoincrement())
+  surveyId  Int
+  groupId   Int
+  survey    Survey   @relation(fields: [surveyId], references: [id])
+  group     Group    @relation(fields: [groupId], references: [id])
+
+  @@unique([surveyId, groupId])
+}
+
+// Junction table for tracking survey participants
+model SurveyParticipant {
+  id        Int      @id @default(autoincrement())
+  surveyId  Int
+  loginId   Int
+  survey    Survey   @relation(fields: [surveyId], references: [id])
+  login     Login    @relation(fields: [loginId], references: [id])
+
+  @@unique([surveyId, loginId])
 }
 
 model OptionShowTypeSurveyQuestion {
