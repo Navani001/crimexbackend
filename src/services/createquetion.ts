@@ -21,10 +21,10 @@ if(body.optionsType=='pre'){
   options.map(async (item:any)=>{
    const temp=await prisma.options.create({data:{name:item.name,optionTypeId:body.optionTypeId,isPredefined:false}})
    console.log(temp)
-    prisma.optionsQuestion.create({data:{questionId:question.id,optionId:temp.id}})
+    const temp2=await prisma.optionsQuestion.create({data:{questionId:question.id,optionId:temp.id}})
+    console.log(temp2)
   })
-}
-      
+} 
     return {message:"Question created successfully"}
     }catch(err){
 console.log(err)

@@ -3,13 +3,13 @@ const prisma = new PrismaClient();
 
 const data = [
   {
-    id: 1,
+    id: 1000,
     name: "raj",
     optionTypeId:1,
     isPredefined: true,
   },
     {
-    id: 2,
+    id: 2000,
     name: "ram",
     optionTypeId:1,
     isPredefined: true,
