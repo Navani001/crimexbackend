@@ -24,6 +24,7 @@ model Login {
   otherValues            OtherValue[]
   studentSurveyResponses StudentSurveyResponse[]
   surveyParticipation    SurveyParticipant[]     // Added for tracking which groups/surveys a login belongs to
+  studentSkills          StudentSkill[]          // Relation to student skills
 }
 
 model Role {
@@ -105,9 +106,10 @@ model MatrixColumn {
 }
 
 model Skill {
-  id          Int           @id @default(autoincrement())
-  name        String
-  groupSkills GroupSkill[]  // Added relationship to groups
+  id           Int            @id @default(autoincrement())
+  name         String
+  groupSkills  GroupSkill[]   // Added relationship to groups
+  studentSkills StudentSkill[] // Relation to student skills
 }
 
 model Group {
@@ -117,7 +119,6 @@ model Group {
   maximumRp   Int           @default(1000000000)
   level       Int           @default(0)
   description String?       // Added description
-  
   // Relations to replace the problematic type/typeId fields
   skills      GroupSkill[]  // Many-to-many with skills
   roles       GroupRole[]   // Many-to-many with roles
@@ -131,7 +132,6 @@ model GroupSkill {
   skillId   Int
   group     Group    @relation(fields: [groupId], references: [id])
   skill     Skill    @relation(fields: [skillId], references: [id])
-
   @@unique([groupId, skillId])
 }
 
@@ -215,4 +215,14 @@ model OtherValue {
   questionId Int
   login      Login          @relation(fields: [loginId], references: [id])
   question   SurveyQuestion @relation(fields: [questionId], references: [id])
+}
+
+model StudentSkill {
+  id         Int      @id @default(autoincrement())
+  loginId    Int
+  skillId    Int
+  login      Login    @relation(fields: [loginId], references: [id])
+  skill      Skill    @relation(fields: [skillId], references: [id])
+  
+  @@unique([loginId, skillId]) // Prevent duplicate skill assignments
 }

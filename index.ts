@@ -5,6 +5,7 @@ import { groupRoute } from './src/routes/groupRoute';
 import { Options } from './src/routes/options';
 import { CreationRoute } from './src/routes/surveycreation';
 import { SurveyUpdate } from './src/routes/surveyUpdate';
+import { userRoutes } from './src/routes/userRoutes';
 
 fastify.get('/',{
             preHandler: [fastify.authenticate],
@@ -21,6 +22,7 @@ fastify.register(CreationRoute,{prefix:"/api/survey"})
 fastify.register(SurveyUpdate,{prefix:"/api/surveyupdate"})
 fastify.register(Options,{prefix:"/api/options"})
 fastify.register(groupRoute,{prefix:"/api/group"})
+fastify.register(userRoutes,{prefix:"/api/user"})
 const start = async () => {
   try {
     await fastify.listen({ port: 3000 })

@@ -4,13 +4,14 @@ import prisma from "../../src/lib/prisma";
 const data = [
   {
     id: 1,
-    status: "test",
+   loginId:1,
+   skillId:1
   },
 ];
 
-async function OptionShowSeed() {
+async function skillstudentSeed() {
   for (const record of data) {
-    await prisma.optionShowType.upsert({
+    await prisma.studentSkill.upsert({
       where: { id: record.id },
       create: record,
       update: record
@@ -18,4 +19,4 @@ async function OptionShowSeed() {
   }
 }
 
-export default OptionShowSeed;
+export default skillstudentSeed;
