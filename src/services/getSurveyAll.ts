@@ -9,11 +9,11 @@ export async function getallsurvey(userdata:any,body:any) {
         const surveys=await prisma.survey.findMany({where:{status:body}});
 
         console.log(surveys)
-         return {message:"creation successful",data:surveys}
+         return {message:"fetch successful",data:surveys}
     }
     catch(err){
         console.log(err)
-        return {message:"Creation failed",data:null}
+        return {message:"fetch failed",data:null}
     }
    
 }

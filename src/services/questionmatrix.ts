@@ -27,7 +27,7 @@ if(body.optionsType=='pre'){
   })
 } 
 await prisma.matrixColumn.createMany({data:col.map((item:any)=>({columnName:item.name,questionId:question.id}))})
-    return {message:"Question created successfully"}
+    return {message:"Question created successfully", data:question}
     }catch(err){
 console.log(err)
   return {message:"Creation failed",data:null}

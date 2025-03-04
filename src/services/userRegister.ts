@@ -76,6 +76,6 @@ const surveyData = await prisma.survey.findFirst({
     }
     catch(err){
         console.log(err)
-        return {message:"Creation failed",data:null}
+        return {message:"fetch failed",data:null}
     }
 }

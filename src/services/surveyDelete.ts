@@ -8,11 +8,11 @@ export async function deletequestion(userdata:any,body:any) {
     try{
           const user =await prisma.surveyQuestion.delete({where:{id:body.surveyQuestionId}})
           console.log(user)
-         return {message:"creation successful",data:user}
+         return {message:"deletion successful",data:user}
     }
     catch(err){
         console.log(err)
-        return {message:"Creation failed",data:null}
+        return {message:"deletion failed",data:null}
     }
    
 }

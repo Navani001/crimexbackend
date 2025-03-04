@@ -22,11 +22,11 @@ export async function studentgroup(userdata:any,body:any) {
     }
   })
           //   const user =await prisma.survey.create({data:{name:body.name,facultyId:userdata.payload.id,status:"draft",groupId:body.groupId?body.groupId:-1}})
-         return {message:"creation successful",data:studentLogins}
+         return {message:"fetch successful",data:studentLogins}
     }
     catch(err){
         console.log(err)
-        return {message:"Creation failed",data:null}
+        return {message:"fetch failed",data:null}
     }
    
 }
