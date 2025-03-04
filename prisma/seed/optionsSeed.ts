@@ -4,14 +4,16 @@ import prisma from "../../src/lib/prisma";
 const data = [
   {
     id: 1000,
-    name: "raj",
+    name: "agree",
     optionTypeId:1,
+    priority:2,
     isPredefined: true,
   },
     {
     id: 2000,
-    name: "ram",
+    name: "disagress",
     optionTypeId:1,
+      priority:3,
     isPredefined: true,
   },
 ];

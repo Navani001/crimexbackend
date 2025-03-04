@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   // uncomment next line if you use Prisma <5.10
   // directUrl = env("DATABASE_URL_UNPOOLED")
 }
@@ -23,8 +23,8 @@ model Login {
   surveys                Survey[]
   otherValues            OtherValue[]
   studentSurveyResponses StudentSurveyResponse[]
-  surveyParticipation    SurveyParticipant[]     // Added for tracking which groups/surveys a login belongs to
-  studentSkills          StudentSkill[]          // Relation to student skills
+  surveyParticipation    SurveyParticipant[] // Added for tracking which groups/surveys a login belongs to
+  studentSkills          StudentSkill[] // Relation to student skills
 }
 
 model Role {
@@ -58,20 +58,20 @@ model OptionType {
 }
 
 model Survey {
-  id                  Int                  @id @default(autoincrement())
-  name                String
-  facultyId           Int
-  status              String
-  startTime           DateTime?
-  endTime             DateTime?
-  groupId             Int?                 // Optional group ID (can be null)
-  responseCount       Int                  @default(0)
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
-  faculty             Login                @relation(fields: [facultyId], references: [id])
-  surveyQuestions     SurveyQuestion[]
-  groups              SurveyGroup[]        // Many-to-many relationship with groups (can be empty)
-  surveyParticipants  SurveyParticipant[]  // Track participants
+  id                 Int                 @id @default(autoincrement())
+  name               String
+  facultyId          Int
+  status             String
+  startTime          DateTime?
+  endTime            DateTime?
+  groupId            Int? // Optional group ID (can be null)
+  responseCount      Int                 @default(0)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  faculty            Login               @relation(fields: [facultyId], references: [id])
+  surveyQuestions    SurveyQuestion[]
+  groups             SurveyGroup[] // Many-to-many relationship with groups (can be empty)
+  surveyParticipants SurveyParticipant[] // Track participants
 }
 
 model SurveyQuestion {
@@ -106,64 +106,66 @@ model MatrixColumn {
 }
 
 model Skill {
-  id           Int            @id @default(autoincrement())
-  name         String
-  groupSkills  GroupSkill[]   // Added relationship to groups
+  id            Int            @id @default(autoincrement())
+  name          String
+  level         Int
+  groupSkills   GroupSkill[] // Added relationship to groups
   studentSkills StudentSkill[] // Relation to student skills
 }
 
 model Group {
   id          Int           @id @default(autoincrement())
-  name        String        // Added name field
+  name        String // Added name field
   minimumRp   Int           @default(0)
   maximumRp   Int           @default(1000000000)
   level       Int           @default(0)
-  description String?       // Added description
+  description String? // Added description
   // Relations to replace the problematic type/typeId fields
-  skills      GroupSkill[]  // Many-to-many with skills
-  roles       GroupRole[]   // Many-to-many with roles
+  skills      GroupSkill[] // Many-to-many with skills
+  roles       GroupRole[] // Many-to-many with roles
   surveys     SurveyGroup[] // Many-to-many with surveys
 }
 
 // Junction table for Group-Skill many-to-many
 model GroupSkill {
-  id        Int      @id @default(autoincrement())
-  groupId   Int
-  skillId   Int
-  group     Group    @relation(fields: [groupId], references: [id])
-  skill     Skill    @relation(fields: [skillId], references: [id])
+  id      Int   @id @default(autoincrement())
+  groupId Int
+  skillId Int
+  group   Group @relation(fields: [groupId], references: [id])
+  skill   Skill @relation(fields: [skillId], references: [id])
+
   @@unique([groupId, skillId])
 }
 
 // Junction table for Group-Role many-to-many
 model GroupRole {
-  id        Int      @id @default(autoincrement())
-  groupId   Int
-  roleId    Int
-  group     Group    @relation(fields: [groupId], references: [id])
-  role      Role     @relation(fields: [roleId], references: [id])
+  id      Int   @id @default(autoincrement())
+  groupId Int
+  roleId  Int
+  group   Group @relation(fields: [groupId], references: [id])
+  role    Role  @relation(fields: [roleId], references: [id])
 
   @@unique([groupId, roleId])
 }
 
 // Junction table for Survey-Group many-to-many
 model SurveyGroup {
-  id        Int      @id @default(autoincrement())
-  surveyId  Int
-  groupId   Int
-  survey    Survey   @relation(fields: [surveyId], references: [id])
-  group     Group    @relation(fields: [groupId], references: [id])
+  id       Int    @id @default(autoincrement())
+  surveyId Int
+  groupId  Int
+  survey   Survey @relation(fields: [surveyId], references: [id])
+  group    Group  @relation(fields: [groupId], references: [id])
 
   @@unique([surveyId, groupId])
 }
 
 // Junction table for tracking survey participants
 model SurveyParticipant {
-  id        Int      @id @default(autoincrement())
-  surveyId  Int
-  loginId   Int
-  survey    Survey   @relation(fields: [surveyId], references: [id])
-  login     Login    @relation(fields: [loginId], references: [id])
+  id       Int    @id @default(autoincrement())
+  surveyId Int
+  loginId  Int
+  survey   Survey @relation(fields: [surveyId], references: [id])
+  login    Login  @relation(fields: [loginId], references: [id])
 
   @@unique([surveyId, loginId])
 }
@@ -177,15 +179,14 @@ model OptionShowTypeSurveyQuestion {
 }
 
 model StudentSurveyResponse {
-  id                      Int            @id @default(autoincrement())
-  surveyQuestionId        Int
-  loginId                 Int
-  preDefinedOptionId      Int            @default(-1)
-  facultyOptionSelectedId Int            @default(-1)
-  createdAt               DateTime       @default(now())
-  updatedAt               DateTime       @updatedAt
-  surveyQuestion          SurveyQuestion @relation(fields: [surveyQuestionId], references: [id])
-  login                   Login          @relation(fields: [loginId], references: [id])
+  id               Int @id @default(autoincrement())
+  surveyQuestionId Int
+  loginId          Int
+  SelectedOptionId Int
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  surveyQuestion   SurveyQuestion @relation(fields: [surveyQuestionId], references: [id])
+  login            Login          @relation(fields: [loginId], references: [id])
 }
 
 model Options {
@@ -218,11 +219,11 @@ model OtherValue {
 }
 
 model StudentSkill {
-  id         Int      @id @default(autoincrement())
-  loginId    Int
-  skillId    Int
-  login      Login    @relation(fields: [loginId], references: [id])
-  skill      Skill    @relation(fields: [skillId], references: [id])
-  
+  id      Int   @id @default(autoincrement())
+  loginId Int
+  skillId Int
+  login   Login @relation(fields: [loginId], references: [id])
+  skill   Skill @relation(fields: [skillId], references: [id])
+
   @@unique([loginId, skillId]) // Prevent duplicate skill assignments
 }

@@ -17,5 +17,4 @@ export async function groupcreation(userdata:any,body:any) {
         console.log(err)
         return {message:"Creation failed",data:null}
     }
-   
 }

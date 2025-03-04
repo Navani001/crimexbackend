@@ -1,15 +1,24 @@
 import { FastifyInstance } from "fastify";
-import { Deletequestion, UpdateSurvey } from "../controllers/surveyUpdate";
-import { OptionofType, OptionsDatabase, OptionsShow } from "../controllers/options";
-import { userController } from "../controllers/userController";
+import { registerquestion, registerSurvey, surveyView, userController } from "../controllers/userController";
+
 
 
 
 
 export async function userRoutes(fastify: FastifyInstance) {
-  fastify.post("/surveys",{
+  fastify.get("/surveys",{
             preHandler: [fastify.authenticate],
         }, userController);
 
-  
+   fastify.post("/register/survey",{
+            preHandler: [fastify.authenticate],
+        }, registerSurvey);
+
+  fastify.post("/register/question",{
+            preHandler: [fastify.authenticate],
+        }, registerquestion);
+    fastify.get("/registered/survey/view/:id",{
+            preHandler: [fastify.authenticate],
+        }, surveyView);
+
 }

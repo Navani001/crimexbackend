@@ -4,7 +4,12 @@ import prisma from "../../src/lib/prisma";
 const data = [
   {
     id: 1,
-    name: "raj",
+    name: "multiple choice",
+   
+  },
+  {
+    id: 1,
+    name: "matrix",
    
   },
 ];

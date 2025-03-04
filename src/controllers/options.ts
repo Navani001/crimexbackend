@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Login } from "../services/auth";
-import {  createSurvey } from "../services/createsurvey";
+
 import { optionofType, options, optionshow } from "../services/options";
 
 export async function OptionsDatabase(req: FastifyRequest, reply: FastifyReply) {

@@ -17,4 +17,5 @@ fastify.get("/getgroup",{
   fastify.post("/group/student",{
             preHandler: [fastify.authenticate],
         }, studentGroup);
+ 
 }

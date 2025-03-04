@@ -4,7 +4,7 @@ import prisma from "../../src/lib/prisma";
 const data = [
   {
     id: 1,
-    status: "test",
+    status: "shuffle",
   },
 ];
 

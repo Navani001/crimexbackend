@@ -5,6 +5,7 @@ import {  createSurvey } from "../services/createsurvey";
 export async function CreateSurvey(req: FastifyRequest, reply: FastifyReply) {
 const user=req.user
 const body=req.body;
+console.log("hi")
   const result = await createSurvey(user,body);
   console.log(result)
   if (result.data) {
