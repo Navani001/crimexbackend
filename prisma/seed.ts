@@ -10,6 +10,7 @@ import OptionsSeed from "./seed/optionsSeed";
 import OptionTypeSeed from "./seed/optionsTypeSeed";
 import skillSeed from "./seed/skillSeed";
 import skillstudentSeed from "./seed/skillstudentseed";
+import skillLevelSeed from "./seed/skilllevel";
 
 
 const prisma = new PrismaClient();
@@ -31,8 +32,10 @@ async function main() {
   console.log("seven")
   await OptionsSeed();
   console.log("eight")
-  await skillstudentSeed()
+  await skillLevelSeed()
   console.log("nine")
+  await skillstudentSeed()
+  console.log("ten")
 }
 
 

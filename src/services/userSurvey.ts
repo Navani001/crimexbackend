@@ -15,9 +15,8 @@ export async function userSurvey(userdata: any, body: any) {
     }
     
     // Get student's role ID and skill IDs
-    const roleId = student.roleId;
-    const skillIds = student.studentSkills.map(ss => ss.skillId);
-    console.log(roleId, skillIds);
+
+    
     
     // Find all available surveys for the student
     const availableSurveys = await prisma.survey.findMany({
@@ -28,16 +27,9 @@ export async function userSurvey(userdata: any, body: any) {
             groups: {
               some: {
                 group: {
-                  roles: {
-                    some: {
-                      roleId: roleId
-                    }
-                  },
-                  skills:{
-                    some: {
-                      skillId: {
-                        in: skillIds
-                      }
+                  groupStudents:{
+                    some:{
+                      loginId:student.id
                     }
                   }
                 }
@@ -46,18 +38,7 @@ export async function userSurvey(userdata: any, body: any) {
           }
         ]
       },
-      include: {
-        groups: {
-          include: {
-            group: {
-              include: {
-                roles: true,
-                skills: true
-              }
-            }
-          }
-        }
-      },
+      
       orderBy: {
         createdAt: 'desc'
       }
@@ -68,7 +49,7 @@ export async function userSurvey(userdata: any, body: any) {
     //    }
 
     // })
-    console.log("Surveys found:", availableSurveys);
+    console.log("Surveys found:");
     
     return { message: "Query successful", data: availableSurveys };
   } catch (err) {

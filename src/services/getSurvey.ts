@@ -8,7 +8,7 @@ export async function getsurvey(userdata:any,body:any) {
     try{
         const survey=await prisma.survey.findFirst({where:{id:parseInt(body)},include:{surveyQuestions:{
             include:{optionsQuestions:{include:{option:true}}}
-   
+            
         }}})
         console.log(survey)
         //   const user =await prisma.survey.create({data:{name:body.name,facultyId:userdata.payload.id,status:"draft",groupId:body.groupId?body.groupId:-1}})

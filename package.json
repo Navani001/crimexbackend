@@ -16,6 +16,7 @@
     "@fastify/jwt": "^9.0.4",
     "@fastify/sensible": "^6.0.3",
     "@prisma/client": "^6.4.1",
+    "axios": "^1.8.1",
     "bcrypt": "^5.1.1",
     "fastify": "^5.2.1",
     "nodemon": "^3.1.9",

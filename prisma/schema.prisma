@@ -23,6 +23,7 @@ model Login {
   surveys                Survey[]
   otherValues            OtherValue[]
   studentSurveyResponses StudentSurveyResponse[]
+  groupStudents          GroupStudent[]
   surveyParticipation    SurveyParticipant[] // Added for tracking which groups/surveys a login belongs to
   studentSkills          StudentSkill[] // Relation to student skills
 }
@@ -31,7 +32,7 @@ model Role {
   id         Int         @id @default(autoincrement())
   name       String
   logins     Login[]
-  groupRoles GroupRole[] // Added relationship to groups
+  // Added relationship to groups
 }
 
 model QuestionType {
@@ -108,45 +109,41 @@ model MatrixColumn {
 model Skill {
   id            Int            @id @default(autoincrement())
   name          String
-  level         Int
-  groupSkills   GroupSkill[] // Added relationship to groups
-  studentSkills StudentSkill[] // Relation to student skills
+  skillLevels   SkillLevel[]   // Added relation to SkillLevel
+  // Relation to student skills
 }
+
+model SkillLevel {
+  id       Int   @id @default(autoincrement())
+  skillId  Int
+  level    Int
+  skill    Skill @relation(fields: [skillId], references: [id]) // Added relation back to Skill
+  studentSkills StudentSkill[]
+}
+
 
 model Group {
   id          Int           @id @default(autoincrement())
-  name        String // Added name field
+  name        String
   minimumRp   Int           @default(0)
   maximumRp   Int           @default(1000000000)
   level       Int           @default(0)
-  description String? // Added description
-  // Relations to replace the problematic type/typeId fields
-  skills      GroupSkill[] // Many-to-many with skills
-  roles       GroupRole[] // Many-to-many with roles
-  surveys     SurveyGroup[] // Many-to-many with surveys
+  description String?
+  surveys     SurveyGroup[]
+  groupStudents GroupStudent[] // Added relation to GroupStudent
 }
 
-// Junction table for Group-Skill many-to-many
-model GroupSkill {
-  id      Int   @id @default(autoincrement())
-  groupId Int
-  skillId Int
-  group   Group @relation(fields: [groupId], references: [id])
-  skill   Skill @relation(fields: [skillId], references: [id])
+model GroupStudent {
+  id       Int   @id @default(autoincrement())
+  groupId  Int
+  loginId  Int
+  group    Group @relation(fields: [groupId], references: [id])
+  login    Login @relation(fields: [loginId], references: [id])
 
-  @@unique([groupId, skillId])
+  @@unique([groupId, loginId]) // Prevent duplicate group-student assignments
 }
 
-// Junction table for Group-Role many-to-many
-model GroupRole {
-  id      Int   @id @default(autoincrement())
-  groupId Int
-  roleId  Int
-  group   Group @relation(fields: [groupId], references: [id])
-  role    Role  @relation(fields: [roleId], references: [id])
 
-  @@unique([groupId, roleId])
-}
 
 // Junction table for Survey-Group many-to-many
 model SurveyGroup {
@@ -223,7 +220,7 @@ model StudentSkill {
   loginId Int
   skillId Int
   login   Login @relation(fields: [loginId], references: [id])
-  skill   Skill @relation(fields: [skillId], references: [id])
+  skill   SkillLevel @relation(fields: [skillId], references: [id])
 
   @@unique([loginId, skillId]) // Prevent duplicate skill assignments
 }
