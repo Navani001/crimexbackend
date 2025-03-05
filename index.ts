@@ -2,6 +2,7 @@
 import fastify from './src/middleware/jwt';
 import {  LoginUserRoute } from './src/routes/auth';
 import { groupRoute } from './src/routes/groupRoute';
+
 import { Options } from './src/routes/options';
 import { CreationRoute } from './src/routes/surveycreation';
 import { SurveyUpdate } from './src/routes/surveyUpdate';
@@ -15,7 +16,8 @@ fastify.get('/',{
 
 //j
 fastify.get('/jwt', async (request:any, reply:any) => {
-  return { hello: 'world' }
+  console.log("Hi")
+  return reply.status(200).send({ hello: 'world' })
 })
 fastify.register(LoginUserRoute,{prefix:"/api/auth"})
 fastify.register(CreationRoute,{prefix:"/api/survey"})

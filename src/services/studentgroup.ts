@@ -5,6 +5,10 @@ export async function studentgroup(userdata:any,body:any) {
     try{
   const studentLogins = await prisma.login.findMany({
     where: {
+      rp:{
+        gte:body.minRp,
+        lte:body.maxRp
+      },
       roleId: {
         in:body.role
       },

@@ -6,10 +6,16 @@ export async function getsurvey(userdata:any,body:any) {
             return { message: "data is required", data: null };
         }
     try{
-        const survey=await prisma.survey.findFirst({where:{id:parseInt(body)},include:{surveyQuestions:{
-            include:{optionsQuestions:{include:{option:true}}}
+        const survey=await prisma.survey.findFirst(
+            {where:{id:parseInt(body)},
+            include:{surveyQuestions:{
+            include:{optionsQuestions:{
+                select:{
+                option:true
+            }},matrixColumns:true}
             
         }}})
+       
         console.log(survey)
         //   const user =await prisma.survey.create({data:{name:body.name,facultyId:userdata.payload.id,status:"draft",groupId:body.groupId?body.groupId:-1}})
          return {message:"fetch successful",data:survey}

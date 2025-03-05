@@ -1,7 +1,7 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import fastifyJwt, { JWT } from '@fastify/jwt';
 import fastifyCookie from '@fastify/cookie';
-
+import cors from '@fastify/cors';
 const fastify = Fastify();
 
 // Define the types for request user property
@@ -20,7 +20,12 @@ fastify.register(fastifyCookie, {
   secret: process.env.COOKIE_SECRET || 'some-secret-key',
   hook: 'onRequest', // Change to onRequest to ensure cookies are parsed early
 });
-
+fastify.register(cors, {
+  origin: true, // Be careful in production - specify exact origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization',''],
+  credentials:true
+});
 // Then register the JWT plugin
 fastify.register(fastifyJwt, {
   secret: process.env.JWT_SECRET || 'imvinojan02061999xxxx',
@@ -29,20 +34,21 @@ fastify.register(fastifyJwt, {
     signed: false // Set to true if you want signed cookies
   }
 });
-
-// Authentication decorator
 fastify.decorate(
   'authenticate',
   async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const token = request.cookies.access_token;
-      
+      const token = request.headers['authorization'];
+      console.log(token)
       if (!token) {
         throw new Error('No token provided');
       }
-      
+       const access_token = token.split(' ')[1];
+       if (!access_token) {
+        throw new Error('No token provided');
+      }
       // Verify the token
-      const decoded = fastify.jwt.verify(token);
+      const decoded = fastify.jwt.verify(access_token);
       
       // Set the user in the request
       request.user = decoded;

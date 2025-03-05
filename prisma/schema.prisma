@@ -28,12 +28,12 @@ model Login {
   studentSkills          StudentSkill[] // Relation to student skills
 }
 
-model Role {
-  id         Int         @id @default(autoincrement())
-  name       String
-  logins     Login[]
-  // Added relationship to groups
-}
+// model Role {
+//   id         Int         @id @default(autoincrement())
+//   name       String
+//   logins     Login[]
+//   // Added relationship to groups
+// }
 
 model QuestionType {
   id              Int              @id @default(autoincrement())
@@ -106,12 +106,12 @@ model MatrixColumn {
   question   SurveyQuestion @relation(fields: [questionId], references: [id])
 }
 
-model Skill {
-  id            Int            @id @default(autoincrement())
-  name          String
-  skillLevels   SkillLevel[]   // Added relation to SkillLevel
-  // Relation to student skills
-}
+// model Skill {
+//   id            Int            @id @default(autoincrement())
+//   name          String
+//   skillLevels   SkillLevel[]   // Added relation to SkillLevel
+//   // Relation to student skills
+// }
 
 model SkillLevel {
   id       Int   @id @default(autoincrement())
@@ -119,18 +119,54 @@ model SkillLevel {
   level    Int
   skill    Skill @relation(fields: [skillId], references: [id]) // Added relation back to Skill
   studentSkills StudentSkill[]
+   groupSkills   GroupSkill[]  
 }
 
+model GroupSkill {
+  id       Int    @id @default(autoincrement())
+  groupId  Int
+  skillId  Int
+  group    Group  @relation(fields: [groupId], references: [id])
+  skill    SkillLevel  @relation(fields: [skillId], references: [id])
+
+  @@unique([groupId, skillId]) // Prevent duplicate entries
+}
+
+model GroupRole {
+  id      Int    @id @default(autoincrement())
+  groupId Int
+  roleId  Int
+  group   Group  @relation(fields: [groupId], references: [id])
+  role    Role   @relation(fields: [roleId], references: [id])
+
+  @@unique([groupId, roleId]) // Prevent duplicate entries
+}
 
 model Group {
-  id          Int           @id @default(autoincrement())
-  name        String
-  minimumRp   Int           @default(0)
-  maximumRp   Int           @default(1000000000)
-  level       Int           @default(0)
-  description String?
-  surveys     SurveyGroup[]
-  groupStudents GroupStudent[] // Added relation to GroupStudent
+  id           Int           @id @default(autoincrement())
+  name         String
+  minimumRp    Int           @default(0)
+  maximumRp    Int           @default(1000000000)
+  level        Int           @default(0)
+  description  String?
+  surveys      SurveyGroup[] // Many-to-many relationship with Survey
+  groupStudents GroupStudent[] // Many-to-many relationship with Student
+  groupSkills  GroupSkill[] // Many-to-many relationship with Skill
+  groupRoles   GroupRole[] // Many-to-many relationship with Role
+}
+
+model Skill {
+  id            Int            @id @default(autoincrement())
+  name          String
+  skillLevels   SkillLevel[]   // Relation to SkillLevel
+  // Relation to GroupSkill
+}
+
+model Role {
+  id         Int         @id @default(autoincrement())
+  name       String
+  logins     Login[]     // Relation to Logins
+  groupRoles GroupRole[] // Relation to GroupRole
 }
 
 model GroupStudent {
@@ -142,6 +178,7 @@ model GroupStudent {
 
   @@unique([groupId, loginId]) // Prevent duplicate group-student assignments
 }
+
 
 
 

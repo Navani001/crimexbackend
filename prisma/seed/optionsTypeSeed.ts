@@ -7,6 +7,12 @@ const data = [
     type: "agree-disagree",
    
   },
+   {
+    id: 2,
+    type: "true-false",
+   
+  },
+   
 ];
 async function OptionTypeSeed() {
   for (const record of data) {

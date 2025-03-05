@@ -15,6 +15,7 @@ export async function updateSurvey(userdata: any, body: any) {
       where: { id: surveyQuestionId },
       include: {
         optionsQuestions: {
+          select:{option:true},
           include: { option: true }
         },
       }

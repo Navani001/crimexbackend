@@ -5,7 +5,7 @@ const data = [
   {
     id: 1,
     skillId:1,
-    level:2
+    level:1
   },
   {
     id: 2,

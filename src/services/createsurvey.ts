@@ -6,6 +6,7 @@ export async function createSurvey(userdata:any,body:any) {
             return { message: "data is required", data: null };
         }
     try{
+        console.log(userdata)
           const survey =await prisma.survey.create({data:{name:body.name,facultyId:userdata.payload.id,status:"draft",groupId:body.groupId?body.groupId:-1}})
           if(body.groupId){
             await prisma.surveyGroup.create({data:{surveyId:survey.id,groupId:body.groupId}})
