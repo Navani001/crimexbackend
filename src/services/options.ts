@@ -13,6 +13,19 @@ export async function options(userdata:any,body:any) {
         return {message:"fetch failed",data:null}
     } 
 }
+export async function questionoptions(userdata:any,body:any) {
+     
+    try{
+        const surveys=await prisma.questionType.findMany();
+
+        console.log(surveys)
+         return {message:"fetch successful",data:surveys}
+    }
+    catch(err){
+        console.log(err)
+        return {message:"fetch failed",data:null}
+    } 
+}
 export async function optionshow(userdata:any,body:any) {
       
     try{

@@ -11,31 +11,34 @@ import OptionTypeSeed from "./seed/optionsTypeSeed";
 import skillSeed from "./seed/skillSeed";
 import skillstudentSeed from "./seed/skillstudentseed";
 import skillLevelSeed from "./seed/skilllevel";
+import DepartmentSeed from "./seed/departmentSeed";
 
 
 const prisma = new PrismaClient();
 
 async function main() {
-  await roleSeed();
+  await DepartmentSeed()
   console.log("one")
-  await loginSeed();
+  await roleSeed();
   console.log("two")
-  await OptionTypeSeed()
+  await loginSeed();
   console.log("three")
-  await QuestionSeed();
+  await OptionTypeSeed()
   console.log("four")
-  await OptionShowSeed();
+  await QuestionSeed();
   console.log("five")
-  await logginSeed()
+  await OptionShowSeed();
   console.log("six")
-  await skillSeed()
+  await logginSeed()
   console.log("seven")
-  await OptionsSeed();
+  await skillSeed()
   console.log("eight")
-  await skillLevelSeed()
+  await OptionsSeed();
   console.log("nine")
-  await skillstudentSeed()
+  await skillLevelSeed()
   console.log("ten")
+  await skillstudentSeed()
+  console.log("eleven")
 }
 
 

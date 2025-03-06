@@ -1,11 +1,23 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import { optionofType, options, optionshow } from "../services/options";
+import { optionofType, options, optionshow, questionoptions } from "../services/options";
 
 export async function OptionsDatabase(req: FastifyRequest, reply: FastifyReply) {
 const user=req.user
 const body=req.body;
   const result = await options(user,body);
+  console.log(result)
+  if (result.data) {
+    return reply.status(200).send(result);
+  } else {
+    // If there was an error, send a 401 Unauthorized status
+    return reply.status(500).send(result);
+  }
+}
+export async function QuestionOptions(req: FastifyRequest, reply: FastifyReply) {
+const user=req.user
+const body=req.body;
+  const result = await questionoptions(user,body);
   console.log(result)
   if (result.data) {
     return reply.status(200).send(result);

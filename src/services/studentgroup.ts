@@ -3,6 +3,7 @@ import prisma from "../lib/prisma";
 export async function studentgroup(userdata:any,body:any) {
       
     try{
+      console.log(body.skill)
   const studentLogins = await prisma.login.findMany({
     where: {
       rp:{
@@ -12,9 +13,19 @@ export async function studentgroup(userdata:any,body:any) {
       roleId: {
         in:body.role
       },
+       studentSkills: {
+          some: body.skills.length > 0 // Only filter if skills is not empty
+            ? {
+                skillId: {
+                  in: body.skills
+                }
+              }
+            : undefined
+        },
       isDeleted: false // Optional: only get non-deleted accounts
     },
     include: {
+      dept: true, // Include the department information if needed
       studentSkills:{
         where:{
           skillId:{
