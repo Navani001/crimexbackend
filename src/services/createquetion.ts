@@ -8,7 +8,10 @@ export async function Question(userdata:any,body:any) {
         questionTypeId:body.questionTypeId,
         surveyId:body.surveyId,
         question:body.question,
-        optionTypeId:body.optionTypeId
+        optionTypeId:body.optionTypeId?body.optionTypeId:null,
+        score:body.score?body.score:-1,
+        isMultiple:body.isMultiple?body.isMultiple:false, 
+        isOther:body.isOther?body.isOther:false
       }})
 if(body.optionsType=='pre'){
   const createdOptions= await prisma.optionsQuestion.createMany(

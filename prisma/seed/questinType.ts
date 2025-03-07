@@ -12,6 +12,11 @@ const data = [
     name: "matrix",
    
   },
+  {
+    id: 3,
+    name: "single",
+   
+  },
 ];
 async function QuestionSeed() {
   for (const record of data) {

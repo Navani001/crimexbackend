@@ -96,7 +96,7 @@ model SurveyQuestion {
   surveyId                      Int
   question                      String
   score                         Int                            @default(-1)
-  optionTypeId                  Int
+  optionTypeId                  Int?
   isOther                       Boolean                        @default(false)
   isActive                      Boolean                        @default(true)
   isMultiple                    Boolean                        @default(false)
@@ -104,7 +104,7 @@ model SurveyQuestion {
   updatedAt                     DateTime                       @updatedAt
   questionType                  QuestionType                   @relation(fields: [questionTypeId], references: [id])
   survey                        Survey                         @relation(fields: [surveyId], references: [id])
-  optionType                    OptionType                     @relation(fields: [optionTypeId], references: [id])
+  optionType                    OptionType?                     @relation(fields: [optionTypeId], references: [id])
   matrixColumns                 MatrixColumn[]
   optionsQuestions              OptionsQuestion[]
   studentSurveyResponses        StudentSurveyResponse[]
