@@ -28,7 +28,7 @@ if(body.optionsType=='pre'){
     console.log(temp2)
   })
 } 
-    return {message:"Question created successfully"}
+    return {message:"Question created successfully",data:"success"}
     }catch(err){
 console.log(err)
   return {message:"Creation failed",data:null}

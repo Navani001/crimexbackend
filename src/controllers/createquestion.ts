@@ -11,7 +11,6 @@ const body=req.body;
 
   if (result.data) {
      
-    
     return reply.status(200).send(result);
   } else {
     // If there was an error, send a 401 Unauthorized status
