@@ -37,6 +37,15 @@ console.log(err)
    
 }
 
+export async function deletequestion(userdata:any,body:any){
+  try{
+  await prisma.surveyQuestion.delete({where:{id:body.questionId,surveyId:body.surveyId}})
+    return {message:"Question deleted successfully",data:"success"}
+  }catch(err){
+    console.log(err)
+    return {message:"Deletion failed",data:null}
+  }
+}
 
 
 

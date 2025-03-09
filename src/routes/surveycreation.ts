@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { CreateSurvey } from "../controllers/surveycreation";
-import { CreateQuestion, CreateQuestionMatrix } from "../controllers/createquestion";
+import { CreateQuestion, CreateQuestionMatrix, deleteQuestion } from "../controllers/createquestion";
 import { surveyGet, surveyGetAll } from "../controllers/getSurvey";
 
 export async function CreationRoute(fastify: FastifyInstance) {
@@ -19,5 +19,8 @@ fastify.get("/getall/:type",{
 fastify.post("/createquestion/matrix",{
             preHandler: [fastify.authenticate],
         }, CreateQuestionMatrix);
+fastify.post("/deletequestion",{
+            preHandler: [fastify.authenticate],
+        }, deleteQuestion);
   
 }

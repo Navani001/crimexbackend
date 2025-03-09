@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { updateSurvey } from "../services/surveyUpdate";
-import { deletequestion } from "../services/surveyDelete";
+import { deletesurvey } from "../services/surveyDelete";
+
 
 export async function UpdateSurvey(req: FastifyRequest, reply: FastifyReply) {
 const user=req.user
@@ -18,7 +19,7 @@ const body=req.body;
 export async function Deletequestion(req: FastifyRequest, reply: FastifyReply) {
 const user=req.user
 const body=req.body;
-  const result = await deletequestion(user,body);
+  const result = await deletesurvey(user,body);
   console.log(result)
   if (result.data) {
     return reply.status(200).send(result);
