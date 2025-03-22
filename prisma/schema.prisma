@@ -1,3 +1,5 @@
+// This is your Prisma schema file for the CrimeX project
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -5,17 +7,124 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // uncomment next line if you use Prisma <5.10
-  // directUrl = env("DATABASE_URL_UNPOOLED")
 }
+
+// User authentication and roles
 model Login {
-  id       Int     @id @default(autoincrement())
-  name     String
-  email    String  @unique
-  password String?
-  logo                   String?
-  isDeleted              Boolean                 @default(false)
-  createdAt              DateTime                @default(now())
-  updatedAt              DateTime                @updatedAt
- 
+  id                Int            @id @default(autoincrement())
+  name              String
+  email             String         @unique
+  password          String         @default("123")
+  role              String         @default("public")
+  logo              String?
+  policeStationId   Int?
+  isDeleted         Boolean        @default(false)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @default(now()) @updatedAt
+  
+  // Relations
+  policeStation     PoliceStation? @relation(fields: [policeStationId], references: [id])
+  crimes            Crime[]
+  assignedCrimes    CrimeAssign[]  @relation("AssignedTo")
+  assignedByCrimes  CrimeAssign[]  @relation("AssignedBy")
+  cctvs             CCTV[]
+}
+
+// Police station information
+model PoliceStation {
+  id           Int      @id @default(autoincrement())
+  name         String
+  lat          Decimal  @db.Decimal(10, 7)
+  long         Decimal  @db.Decimal(10, 7)
+  address      String?
+  jurisdiction String?
+  
+  // Relations
+  users        Login[]
+  cctvs        CCTV[]
+}
+
+// Crime categories
+model CrimeType {
+  id          Int            @id @default(autoincrement())
+  name        String
+  severity    Int            @default(1)
+  
+  // Relations
+  crimes      Crime[]
+  highCrimeAreas HighCrimeArea[]
+}
+
+// Crime incidents
+model Crime {
+  id               Int           @id @default(autoincrement())
+  crimeTypeId      Int
+  lat              Decimal       @db.Decimal(10, 7)
+  long             Decimal       @db.Decimal(10, 7)
+  description      String
+  timeOfOccurrence DateTime
+  isFake           Boolean       @default(false)
+  location         String?
+  createdBy        Int
+  priority         Int           @default(1)
+  status           String        @default("reported")
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now()) @updatedAt
+  
+  // Relations
+  crimeType        CrimeType     @relation(fields: [crimeTypeId], references: [id])
+  creator          Login         @relation(fields: [createdBy], references: [id])
+  assignments      CrimeAssign[]
+}
+
+// Crime assignment to officers
+model CrimeAssign {
+  id          Int      @id @default(autoincrement())
+  crimeId     Int
+  loginId     Int
+  assignedBy  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  status      String   @default("assigned")
+  
+  // Relations
+  crime       Crime    @relation(fields: [crimeId], references: [id])
+  assignedTo  Login    @relation("AssignedTo", fields: [loginId], references: [id])
+  assigner    Login    @relation("AssignedBy", fields: [assignedBy], references: [id])
+}
+
+// CCTV locations
+model CCTV {
+  id              Int          @id @default(autoincrement())
+  name            String
+  lat             Decimal      @db.Decimal(10, 7)
+  long            Decimal      @db.Decimal(10, 7)
+  location        String
+  createdBy       Int
+  isActive        Boolean      @default(true)
+  policeStationId Int?
+  installedDate   DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now()) @updatedAt
+  
+  // Relations
+  creator         Login        @relation(fields: [createdBy], references: [id])
+  policeStation   PoliceStation? @relation(fields: [policeStationId], references: [id])
+}
+
+// High crime areas determined by analysis
+model HighCrimeArea {
+  id             Int      @id @default(autoincrement())
+  lat            Decimal  @db.Decimal(10, 7)
+  long           Decimal  @db.Decimal(10, 7)
+  radius         Decimal? @db.Decimal(10, 2)
+  description    String
+  priority       Int
+  crimeTypeId    Int
+  crimeCount     Int      @default(0)
+  dateIdentified DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  
+  // Relations
+  crimeType      CrimeType @relation(fields: [crimeTypeId], references: [id])
 }

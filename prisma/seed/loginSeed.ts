@@ -8,6 +8,7 @@ const data = [
     email: "navaneethakrishnan.cs23@bitsathy.ac.in",
     logo: "ff",
     isDeleted: false,
+    role: "admin",
     password:"123",
     updatedAt: new Date(),
     createdAt: new Date(),
@@ -16,7 +17,8 @@ const data = [
    {
     id: 2,
     name: "ram",
-    email: "ram@gmail.com",
+    email: "thiruselvan.cs23@bitsathy.ac.in",
+    role: "police",
     logo: "ff",
     isDeleted: false,
     updatedAt: new Date(),
