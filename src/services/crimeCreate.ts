@@ -12,10 +12,12 @@ export async function CreateCrime(body:any,includeCreator = false, includeStatio
       priority 
     } = body;
     
+    console.log("vc")
     // Validate required fields
     if (!crimeTypeId || !lat || !long || !description ) {
       return null
     }
+    
     
     // Create the crime
     const crime = await prisma.crime.create({

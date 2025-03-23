@@ -13,6 +13,29 @@ const data = [
     updatedAt: new Date(),
     createdAt: new Date(),
     
+  },{
+    id: 3,
+    name: "raja",
+    email: "navaneetha2006krishnan@gmail.com",
+    logo: "ff",
+    isDeleted: false,
+    role: "police",
+    password:"123",
+    updatedAt: new Date(),
+    createdAt: new Date(),
+    
+  },
+  {
+    id: 4,
+    name: "system",
+    email: "navaneetha2006k@gmail.com",
+    logo: "ff",
+    isDeleted: false,
+    role: "admin",
+    password:"123",
+    updatedAt: new Date(),
+    createdAt: new Date(),
+    
   },
    {
     id: 2,
