@@ -18,7 +18,7 @@ try {
 
     // Build where clause based on query parameters
     const whereClause: any = {};
-    
+    whereClause.isPatroll = false;
     if (crimeTypeId) {
       whereClause.crimeTypeId = parseInt(crimeTypeId as string);
     }

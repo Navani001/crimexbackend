@@ -3,7 +3,7 @@ import prisma from "../../src/lib/prisma";
 export async function cctvSeed() {
   const data = [
     {
-      id: 1,
+      id: 1000,
       name: 'Downtown Junction Camera',
       lat: 18.9600,
       long: 72.8250,
@@ -15,7 +15,7 @@ export async function cctvSeed() {
       updatedAt: new Date()
     },
     {
-      id: 2,
+      id: 2000,
       name: 'North Mall Entrance',
       lat: 19.0100,
       long: 72.8470,
@@ -27,7 +27,7 @@ export async function cctvSeed() {
       updatedAt: new Date()
     },
     {
-      id: 3,
+      id: 30000,
       name: 'East Park Camera',
       lat: 18.9530,
       long: 72.9020,

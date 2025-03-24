@@ -1,6 +1,6 @@
 import prisma from "../lib/prisma";
 
-export async function CreateCrime(body:any,includeCreator = false, includeStation = false) {
+export async function CreateCrime(body:any,user:any,includeCreator = false, includeStation = false) {
  try {
     const { 
       crimeTypeId, 
@@ -9,7 +9,10 @@ export async function CreateCrime(body:any,includeCreator = false, includeStatio
       description, 
       timeOfOccurrence, 
       location, 
-      priority 
+      loginId,
+      isPatroll=false,
+      priority ,
+      isCrime
     } = body;
     
     console.log("vc")
@@ -30,10 +33,23 @@ export async function CreateCrime(body:any,includeCreator = false, includeStatio
         location: location || '',
         priority: priority ? parseInt(priority) : 1,
         createdBy: 1,
-        // Public users cannot create fake crimes
+        isPatroll:!isCrime,
         isFake: true
       }
     });
+  
+    if(isPatroll){
+      console.log("creating assign",loginId,user.id)
+      const tem=await prisma.crimeAssign.create({
+        data:{
+          crimeId: crime.id,
+          loginId: loginId,
+          assignedBy:user.id
+
+        }
+      })
+      console.log(tem)
+    }
     console.log("hl")
     return crime
   } catch (error) {

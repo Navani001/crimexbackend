@@ -15,7 +15,8 @@ export async function crimeTypeSeed() {
     { id: 11, name: 'Kidnapping', severity: 8 },
     { id: 12, name: 'Public Disturbance', severity: 1 },
     { id: 13, name: 'Cybercrime', severity: 3 },
-    { id: 14, name: 'Domestic Violence', severity: 7 }
+    { id: 14, name: 'Domestic Violence', severity: 7 },
+     { id: 14, name: 'pattrol', severity: 0 }
   ];
 
   for (const record of data) {

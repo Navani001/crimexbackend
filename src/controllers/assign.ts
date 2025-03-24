@@ -1,10 +1,15 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { createCCTVs, getAllCCTVs } from "../services/cctv";
+import { getAllCrime } from "../services/crimes";
+import { CreateCrime } from "../services/crimeCreate";
+import { CrimeSpot } from "../services/crimeSpot";
+import { CctvAssign } from "../services/cctvAssign";
+import { PoliceAssign } from "../services/PoliceAssign";
 
-export async function CctvController(req: FastifyRequest, reply: FastifyReply) {
+export async function PoliceAssignController(req: any, reply: FastifyReply) {
   try {
+    console.log("testing for crime creation")
     // Call the Login function
-    const result = await getAllCCTVs();
+    const result = await PoliceAssign(req.body,req.user.payload);
 
     // If login was successful
     if (result) {
@@ -32,15 +37,12 @@ export async function CctvController(req: FastifyRequest, reply: FastifyReply) {
     });
   }
 }
-
-
-export async function CreateCCTvController(req: any, reply: FastifyReply) {
+export async function CCtvAssignController(req: any, reply: FastifyReply) {
   try {
     console.log("testing for crime creation")
     // Call the Login function
-    console.log("hello")
     console.log(req.user.payload)
-    const result = await createCCTVs(req.body,req.user.payload);
+    const result = await CctvAssign(req.body);
 
     // If login was successful
     if (result) {

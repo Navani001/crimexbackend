@@ -104,6 +104,11 @@ export async function CrimeSpot(body:any,user:any,includeCreator = false, includ
     // Sort by distance (closest first)
     result.sort((a, b) => a.distanceFromLocation - b.distanceFromLocation);
     console.log(result)
+    if(result.length == 0){
+      return {
+        message: "No"
+      }
+    }
     const crimeAsign = await prisma.crimeAssign.create({
       data:{
         crimeId: result[0].id,

@@ -70,7 +70,7 @@ model Crime {
   status           String        @default("reported")
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @default(now()) @updatedAt
-  
+  isPatroll        Boolean       @default(false) 
   // Relations
   crimeType        CrimeType     @relation(fields: [crimeTypeId], references: [id])
   creator          Login         @relation(fields: [createdBy], references: [id])
