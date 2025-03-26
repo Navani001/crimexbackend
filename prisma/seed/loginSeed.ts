@@ -28,10 +28,10 @@ const data = [
   {
     id: 4,
     name: "system",
-    email: "navaneetha2006k@gmail.com",
+    email: "2006navaneethakrishnan@gmail.com",
     logo: "ff",
     isDeleted: false,
-    role: "admin",
+    role: "user",
     password:"123",
     updatedAt: new Date(),
     createdAt: new Date(),

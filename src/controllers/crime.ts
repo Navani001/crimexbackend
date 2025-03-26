@@ -99,11 +99,10 @@ export async function PoliceLocaationController(req: any, reply: FastifyReply) {
 }
 export async function HighCrimeController(req: any, reply: FastifyReply) {
   try {
-    console.log("testing for crime creation")
-    // Call the Login function
-    console.log(req.user.payload)
+    console.log("testing for high creation")
+  
     const result = await HighCrime();
-
+    console.log(result);
     // If login was successful
     if (result) {
       
