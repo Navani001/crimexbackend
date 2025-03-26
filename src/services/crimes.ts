@@ -46,9 +46,7 @@ try {
       };
     }
     
-    if (isFake !== undefined) {
-      whereClause.isFake = isFake === 'true';
-    }
+   
     
     if (createdBy) {
       whereClause.createdBy = parseInt(createdBy as string);

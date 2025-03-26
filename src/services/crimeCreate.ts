@@ -12,10 +12,11 @@ export async function CreateCrime(body:any,user:any,includeCreator = false, incl
       loginId,
       isPatroll=false,
       priority ,
-      isCrime
+      isCrime,
+      isFake=false
     } = body;
     
-    console.log("vc")
+    console.log(body)
     // Validate required fields
     if (!crimeTypeId || !lat || !long || !description ) {
       return null
@@ -34,7 +35,7 @@ export async function CreateCrime(body:any,user:any,includeCreator = false, incl
         priority: priority ? parseInt(priority) : 1,
         createdBy: 1,
         isPatroll:!isCrime,
-        isFake: true
+        isFake: isFake
       }
     });
   
